@@ -1,9 +1,8 @@
 /reports
 /hello.py!/credentials.json
-!/token.json
-!/config.py
 /.idea/modules.xml
 /.idea/inspectionProfiles/profiles_settings.xml
 /quickstart.py
 /token.json
 /.idea/.gitignore
+/config.py
