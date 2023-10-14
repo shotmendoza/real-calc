@@ -12,7 +12,10 @@ class Bank(ABC):
 
     @abstractmethod
     def open_statement(self, statement_path: Path, *args, **kwargs) -> pd.DataFrame:
-        """Should open the bank statement for the given bank
+        """Should open the bank statement for the given bank. Should run a check
+        to ensure that the correct bank report is being read.
+
+        *args and  **kwargs based on pandas.read_csv() function
 
         :param statement_path: file path to the bank statement
         :return: the dataframe of the bank statement
