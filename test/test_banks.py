@@ -1,7 +1,7 @@
 import pandas as pd
 
 import config
-from api.banks import BestBuy, WellsFargo, AmericanExpress
+from api.banks import BestBuy, WellsFargo, AmericanExpress, Chase, BankOfAmerica
 
 
 def test_amex():
@@ -38,3 +38,30 @@ def test_wells_fargo_d():
     print(df)
     print(df.info())
     print(df["amount"].sum())
+
+
+def test_chase_d():
+    path = config.REPORTS_FOLDER_FROM_ROOT / "Chase5769_Activity_20231016.CSV"
+    chase = Chase()
+    df = chase.open_statement(path)
+    print()
+    print(df)
+    print(df.info())
+
+
+def test_chase_c():
+    path = config.REPORTS_FOLDER_FROM_ROOT / "Chase2748_Activity20221231_20231015_20231016.CSV"
+    chase = Chase()
+    df = chase.open_statement(path)
+    print()
+    print(df)
+    print(df.info())
+
+
+def test_boa():
+    path = config.REPORTS_FOLDER_FROM_ROOT / "currentTransaction_0490.csv"
+    boa = BankOfAmerica()
+    df = boa.open_statement(path)
+    print()
+    print(df)
+    print(df.info())

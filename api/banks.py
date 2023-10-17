@@ -59,3 +59,68 @@ class WellsFargo(Bank):
         df["transaction_type"] = [tags for _ in df["transaction_date"]]
         df = df.drop(labels=["spacer", "spacer2"], axis="columns")
         return df
+
+
+class Chase(Bank):
+    @classmethod
+    def _confirm_chase_headers(cls, columns: list[str]) -> bool:
+        check_for_debit_columns = (
+            "Details", "Posting Date",
+            "Description", "Amount",
+            "Type", "Balance",
+            "Check or Slip #"
+        )
+
+        check_for_credit_columns = (
+            "Card", "Transaction Date",
+            "Post Date", "Description",
+            "Category", "Type", "Amount",
+            "Memo"
+        )
+
+        debit_column_flag = False
+        credit_column_flag = False
+        for required_column in check_for_debit_columns:
+            if required_column not in columns:
+                break
+        for required_column in check_for_credit_columns:
+            if required_column not in columns:
+                break
+
+        if all((debit_column_flag, credit_column_flag)):
+            return False
+        return True
+
+    def open_statement(self, statement_path: Path, *args, **kwargs) -> pd.DataFrame:
+        df = pd.read_csv(
+            statement_path,
+            *args,
+            **kwargs
+        )
+        column_set_check = self._confirm_chase_headers(df.columns)
+        if column_set_check is False:
+            raise KeyError(f"Missing expected Chase csv headers. Please refer to doc for list of expected.")
+        return df
+
+
+class BankOfAmerica(Bank):
+    @classmethod
+    def _confirm_headers(cls, column: list[str]) -> bool:
+        expected_headers = (
+            "Posted Date", "Reference Number",
+            "Payee", "Address", "Amount"
+        )
+
+        for expected in expected_headers:
+            if expected not in column:
+                raise KeyError(f"Expected {expected}, missing from given path.")
+        return True
+
+    def open_statement(self, statement_path: Path, *args, **kwargs) -> pd.DataFrame:
+        df = pd.read_csv(
+            statement_path,
+            *args,
+            **kwargs
+        )
+        column_set_check = self._confirm_headers(df.columns)
+        return df

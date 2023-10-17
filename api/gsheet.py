@@ -18,7 +18,7 @@ class GSpreadWrapper:
             df = pd.DataFrame(wks.get_all_records())
         return df
 
-    def write(self, df: pd.DataFrame) -> None:
+    def update(self, df: pd.DataFrame) -> None:
         with gspread.oauth(credentials_filename=self._oath_credentials).open(self.workbook) as wkb:
             wks = wkb.worksheet(title=self.sheet_name)
             wks.update([df.columns.values.tolist()] + df.values.tolist())
